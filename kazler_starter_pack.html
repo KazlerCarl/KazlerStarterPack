@@ -10,14 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --accent: #7c9cff;      /* blue */
-      --accent-2: #62e6b3;    /* green */
+      --accent: #7c9cff;
+      --accent-2: #62e6b3;
       --muted: #a6adbb;
       --ink: #e9ecf2;
       --bg: #0b0e12;
     }
 
-    /* ===== Base + Animated dark fading lights ===== */
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
@@ -27,7 +26,7 @@
       overflow-x: hidden;
       position: relative;
     }
-    /* soft animated light blobs */
+
     @keyframes moveLights {
       0% { background-position: 16% 30%, 82% 74%; }
       50% { background-position: 58% 36%, 28% 80%; }
@@ -45,13 +44,11 @@
       mix-blend-mode: screen;
       opacity: 0.9;
     }
-    /* dark vignette to fade edges */
     body::after { background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 80%, rgba(0,0,0,0.65) 100%); }
 
-    /* ===== Header / Nav ===== */
     header { background: rgba(12,14,18,0.9); border-bottom: 1px solid rgba(255,255,255,.05); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
     .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; padding: 14px 28px; }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: .4px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
     .brand .logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow: 0 0 15px rgba(98,230,179,0.6); }
 
     nav a { position: relative; color: var(--ink); text-decoration: none; font-weight: 600; margin-left: 18px; display: inline-block; transition: color .3s ease, transform .3s ease; }
@@ -60,37 +57,22 @@
     nav a:hover::after, nav a.active::after { transform: scaleX(1); }
     nav a.active { color: var(--accent-2); }
 
-    /* ===== Hero ===== */
     .hero { display: grid; grid-template-columns: 1fr 360px; gap: 70px; align-items: center; max-width: 1100px; margin: 80px auto; padding: 0 20px; position: relative; z-index: 1; }
     h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.2; color: var(--ink); margin: 0; }
     .kicker { color: var(--accent-2); font-weight: 600; margin-bottom: 8px; }
     .divider { height: 2px; width: 100%; background: linear-gradient(to right, var(--accent), var(--accent-2)); border: none; border-radius: 2px; margin: 20px 0; }
     .lede { color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
 
-    /* profile card on the right (INTERACTIVE) */
-    .card {
-      position:relative; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: 16px; padding: 6px;
-      width: 340px; height: 400px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      transition: transform .25s ease, box-shadow .25s ease; cursor: pointer; will-change: transform;
-    }
-    .card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,.7); }
+    .card { position:relative; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: 16px; padding: 6px; width: 340px; height: 400px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     .thumb { width: 100%; height: 100%; background: #0f1116; border-radius: 12px; overflow: hidden; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display:block; transform: translateZ(0); transition: transform .4s ease; }
-    .card:hover .thumb img { transform: scale(1.04); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display:block; }
 
-    /* ===== Sections ===== */
     .section-title { text-align:center; color: var(--accent-2); font-size: 28px; margin: 60px 0 28px; }
     .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
     .skill-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; text-align: center; transition: .3s ease; color: var(--ink); }
     .skill-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-5px); }
 
     footer { text-align: center; color: var(--muted); padding: 40px 0; border-top: 1px solid rgba(255,255,255,.06); }
-
-    /* ===== Lightbox (click to enlarge) ===== */
-    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease; z-index: 100; }
-    .lightbox.open { opacity: 1; visibility: visible; }
-    .lightbox img { max-width: min(900px, 92vw); max-height: 88vh; border-radius: 16px; box-shadow: 0 18px 60px rgba(0,0,0,.8); }
-    .lightbox .close { position: absolute; top: 16px; right: 18px; font-size: 28px; line-height: 1; color: #fff; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
 
     @media (max-width: 900px) { .hero { grid-template-columns: 1fr; text-align: center; } .card { margin: 0 auto; } }
   </style>
@@ -100,8 +82,8 @@
     <div class="nav-container">
       <div class="brand"><span class="logo"></span> Kazler Carl Flores Umaging</div>
       <nav>
-        <a href="#home">Home</a>
-        <a href="#skills">Skills</a>
+        <a href="#home" class="active">Home</a>
+        <a href="Education.html">Education</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -116,28 +98,21 @@
       <p class="lede">Aside from academics, I’m currently expanding my knowledge in cybersecurity and network systems. I aim to specialize in ethical hacking and network defense while continuously improving my programming skills and technical problem-solving abilities.</p>
       <p class="lede">I’ve gained initial experience exploring <strong>Kali Linux</strong>, a penetration testing and security-focused operating system, which sparked my interest in cybersecurity. Currently, I’m focused on developing my skills and knowledge in networking, cybersecurity, and programming as I continue my studies.</p>
     </div>
-    <div class="card" id="profileCard" role="button" aria-label="View larger profile photo" tabindex="0">
+    <div class="card">
       <div class="thumb">
-        <img id="profileImg" src="kazler1.JPG" alt="Kazler Carl Flores Umaging">
+        <img src="kazler1.JPG" alt="Kazler Carl Flores Umaging">
       </div>
     </div>
   </section>
 
   <section id="skills">
-    <h2 class="section-title">Educational Attainment & Achievements</h2>
+    <h2 class="section-title">Skills Overview</h2>
     <div class="skills-grid">
-      <div class="skill-card">Graduated in 2025 – STEM Strand</div>
-      <div class="skill-card">Best Research in English (2023)</div>
-      <div class="skill-card">Experience with Kali Linux</div>
-      <div class="skill-card">BSIT Major in Network and Security</div>
-    </div>
-
-    <h2 class="section-title">Interests & Ongoing Training</h2>
-    <div class="skills-grid">
-      <div class="skill-card">Website Hacking & Penetration Testing</div>
-      <div class="skill-card">Ethical Hacking</div>
-      <div class="skill-card">Python for Ethical Hacking</div>
-      <div class="skill-card">Cybersecurity for Beginners</div>
+      <div class="skill-card">Networking Basics</div>
+      <div class="skill-card">Cybersecurity Fundamentals</div>
+      <div class="skill-card">Programming (Python, HTML, CSS)</div>
+      <div class="skill-card">Penetration Testing Tools</div>
+      <div class="skill-card">Team Collaboration & Research</div>
     </div>
   </section>
 
@@ -146,69 +121,15 @@
     <p style="text-align:center;">📍 Baguio City, Philippines</p>
     <p style="text-align:center;">📞 <a href="tel:+639277954646" style="color:inherit; text-decoration:none;">0927 795 4646</a></p>
     <p style="text-align:center;">📧 <a href="mailto:kazlercarl.umaging@gmail.com" style="color:inherit; text-decoration:none;">kazlercarl.umaging@gmail.com</a></p>
-    <!-- Replace YOUR_FACEBOOK_URL with your actual profile link when ready -->
-    <p style="text-align:center;">🔗 <a href="https://www.facebook.com/kazlercarl.umaging" target="_blank" style="color: var(--accent-2); text-decoration: none;">Facebook Profile</a></p>
+    <p style="text-align:center;">🔗 <a href="YOUR_FACEBOOK_URL" target="_blank" style="color: var(--accent-2); text-decoration: none;">Facebook Profile</a></p>
   </section>
 
   <footer>
     © <span id="year"></span> Kazler Carl Flores Umaging. All rights reserved.
   </footer>
 
-  <!-- Lightbox modal -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="close" id="lbClose" aria-label="Close">✕</button>
-    <img src="kazler1.JPG" alt="Kazler Carl Flores Umaging – enlarged profile photo">
-  </div>
-
   <script>
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Simple scroll spy for nav active state
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a');
-    function activateLink(){
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - sectionHeight / 3) { current = section.getAttribute('id'); }
-      });
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
-      });
-    }
-    window.addEventListener('scroll', activateLink);
-
-    // ===== Parallax tilt + lightbox for profile card =====
-    const card = document.getElementById('profileCard');
-    const img = document.getElementById('profileImg');
-    const lb = document.getElementById('lightbox');
-    const lbClose = document.getElementById('lbClose');
-
-    // Parallax tilt on mouse move
-    const maxTilt = 6; // degrees
-    function resetTilt(){ card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)'; }
-    card.addEventListener('mousemove', (e) => {
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width; // 0..1
-      const y = (e.clientY - r.top) / r.height;
-      const rx = (0.5 - y) * (maxTilt);
-      const ry = (x - 0.5) * (maxTilt);
-      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-    });
-    card.addEventListener('mouseleave', resetTilt);
-    resetTilt();
-
-    // Click to open lightbox
-    function openLB(){ lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); }
-    function closeLB(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); }
-    card.addEventListener('click', openLB);
-    card.addEventListener('keyup', (e)=>{ if(e.key === 'Enter' || e.key === ' ') openLB(); });
-    lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
-    lbClose.addEventListener('click', closeLB);
-    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeLB(); });
   </script>
 </body>
 </html>
