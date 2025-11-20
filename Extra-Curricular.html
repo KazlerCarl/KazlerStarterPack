@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Extra-Curricular – Kazler</title>
+  <meta name="description" content="Extra-curricular activities of Kazler Carl Flores Umaging.">
+  <meta name="theme-color" content="#0d1117">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent:#7c9cff;
+      --accent-2:#62e6b3;
+      --muted:#a6adbb;
+      --ink:#e9ecf2;
+      --bg:#0b0e12;
+    }
+
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    /* animated background */
+    @keyframes moveLights{
+      0%{background-position:16% 30%,82% 74%}
+      50%{background-position:58% 36%,28% 80%}
+      100%{background-position:20% 26%,76% 68%}
+    }
+    body::before,body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::before{
+      background-image:
+        radial-gradient(900px 700px at 22% 30%, rgba(124,156,255,.16), rgba(124,156,255,0) 60%),
+        radial-gradient(1100px 800px at 78% 70%, rgba(98,230,179,.12), rgba(98,230,179,0) 62%);
+      background-repeat:no-repeat;
+      background-size:140% 140%,160% 160%;
+      background-position:18% 28%,82% 72%;
+      animation:moveLights 24s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+      opacity:.9;
+    }
+    body::after{
+      background:radial-gradient(ellipse at center,
+        rgba(0,0,0,0) 55%,
+        rgba(0,0,0,.35) 80%,
+        rgba(0,0,0,.65) 100%);
+    }
+
+    header {
+      background:rgba(12,14,18,.9);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      padding:14px 28px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(10px);
+    }
+    nav a {
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:600;
+      margin-right:18px;
+      position:relative;
+      display:inline-block;
+      transition:color .3s ease, transform .3s ease;
+    }
+    nav a.active{
+      color:var(--accent-2);
+    }
+
+    .hero {
+      text-align:center;
+      max-width:800px;
+      margin:48px auto 24px;
+      padding:0 20px;
+      position:relative;
+      z-index:1;
+    }
+    h1 {
+      font-size:clamp(32px,6vw,48px);
+      margin-bottom:8px;
+    }
+    .subtitle {
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:20px;
+    }
+    .divider {
+      height:2px;
+      width:60%;
+      margin:16px auto 0;
+      background:linear-gradient(to right,var(--accent),var(--accent-2));
+      border:none;
+      border-radius:2px;
+    }
+
+    .entry {
+      margin:18px auto 0;
+      padding:14px 18px;
+      max-width:650px;
+      background:rgba(15,17,22,0.9);
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      display:flex;
+      position:relative;
+      z-index:1;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      cursor:default;
+    }
+    .logo-box {
+      width:52px;
+      height:52px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.18);
+      margin-right:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:10px;
+      font-weight:700;
+      text-align:center;
+      color:var(--ink);
+      overflow:hidden;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .logo-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+    .entry:hover {
+      transform:translateY(-4px);
+      box-shadow:0 10px 26px rgba(0,0,0,0.6);
+      border-color:rgba(124,156,255,0.6);
+    }
+    .entry:hover .logo-box{
+      box-shadow:0 0 18px rgba(124,156,255,.7);
+      border-color:rgba(124,156,255,.85);
+      transform:scale(1.05) rotate(3deg);
+    }
+    .entry-text { text-align:left; }
+    .title {
+      font-size:18px;
+      font-weight:700;
+      color:var(--accent-2);
+      margin-bottom:4px;
+    }
+    .meta {
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .desc {
+      font-size:14px;
+      margin:0;
+    }
+
+    .next {
+      text-decoration:none;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      padding:14px 26px;
+      border-radius:12px;
+      color:#0b0e12;
+      font-weight:700;
+      display:inline-block;
+      margin-top:30px;
+      box-shadow:0 6px 20px rgba(0,0,0,.4);
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+    .next:hover {
+      transform:translateY(-3px);
+      box-shadow:0 10px 28px rgba(0,0,0,.6);
+    }
+
+    footer {
+      text-align:center;
+      color:var(--muted);
+      margin:30px 0 20px;
+      font-size:13px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 10px 18px;
+      }
+      nav a {
+        margin-right: 12px;
+        font-size: 13px;
+      }
+      .hero {
+        margin: 32px auto 18px;
+        padding: 0 16px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+      .subtitle {
+        font-size: 13px;
+      }
+      .entry {
+        max-width: 100%;
+        margin: 14px auto 0;
+        padding: 12px 14px;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .logo-box {
+        width: 46px;
+        height: 46px;
+        margin-right: 10px;
+      }
+      .title {
+        font-size: 16px;
+      }
+      .meta {
+        font-size: 12px;
+      }
+      .desc {
+        font-size: 13px;
+      }
+      .next {
+        padding: 12px 22px;
+        font-size: 14px;
+      }
+      footer {
+        font-size: 12px;
+        margin: 22px 0 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="kazler_starter_pack.html">Home</a>
+      <a href="Education.html">Education</a>
+      <a href="#" class="active">Extra-Curricular</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Extra-Curricular Activities</h1>
+    <p class="subtitle">Activities supporting my growth in IT, cybersecurity, and teamwork.</p>
+    <hr class="divider">
+
+    <!-- Cybersecurity self-study (Kali) -->
+    <div class="entry">
+      <div class="logo-box"><img src="Kali.jpeg" alt="Kali Linux Logo"></div>
+      <div class="entry-text">
+        <div class="title">Cybersecurity Self-Study</div>
+        <p class="meta">Kali Linux · Basic penetration testing tools</p>
+        <p class="desc">
+          I explore Kali Linux and security-focused tools to understand how attacks work and how systems can be defended,
+          supporting my goal in ethical hacking and network security.
+        </p>
+      </div>
+    </div>
+
+    <!-- Udemy courses -->
+    <div class="entry">
+      <div class="logo-box"><img src="Udemy.png" alt="Udemy Logo"></div>
+      <div class="entry-text">
+        <div class="title">Online Cybersecurity Courses (Udemy)</div>
+        <p class="meta">
+          Website Hacking &amp; Penetration Testing · Learning Ethical Hacking from Scratch ·
+          Python for Ethical Hacking · Cybersecurity Course for Beginners
+        </p>
+        <p class="desc">
+          I take structured online courses to build a solid foundation in cybersecurity concepts, tools, and techniques.
+        </p>
+      </div>
+    </div>
+
+    <!-- Programming / IT practice (Python) -->
+    <div class="entry">
+      <div class="logo-box"><img src="Python.png" alt="Python Logo"></div>
+      <div class="entry-text">
+        <div class="title">Independent Programming &amp; IT Practice</div>
+        <p class="meta">Python · HTML · CSS · Networking basics</p>
+        <p class="desc">
+          Outside of class, I work on small practice tasks and review networking concepts to reinforce what I learn in my BSIT program.
+        </p>
+      </div>
+    </div>
+
+    <!-- Gaming clickable video -->
+    <div class="entry clickable-video" onclick="window.open('gaming_video.mp4', '_blank')">
+      <div class="logo-box">🎮</div>
+      <div class="entry-text">
+        <div class="title">Gaming</div>
+        <p class="meta">Strategy · Competitive · Cooperative</p>
+        <p class="desc">
+          Click to view gameplay highlights that helped develop quick decision-making, focus, and teamwork skills.
+        </p>
+      </div>
+    </div>
+
+    <a class="next" href="kazler_starter_pack.html">Back to Home</a>
+  </section>
+
+  <footer>© 2025 Kazler Carl Flores Umaging</footer>
+</body>
+</html>
