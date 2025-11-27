@@ -4,8 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Extra-Curricular – Kazler</title>
-  <meta name="description" content="Extra-curricular activities of Kazler Carl Flores Umaging.">
-  <meta name="theme-color" content="#0d1117">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -16,220 +14,139 @@
       --bg:#0b0e12;
     }
 
-    html {
-      height:100%;
-      scroll-behavior:smooth;
-    }
-
-    body {
+    html, body{
       margin:0;
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      padding:0;
+      height:100%;
+      overflow:hidden; /* no page scroll */
+      font-family:'Inter',sans-serif;
       background:var(--bg);
       color:var(--ink);
-      overflow-x:hidden;
-      overflow-y:hidden;      /* NO SCROLL ON DESKTOP */
-      position:relative;
-      height:100vh;           /* lock to viewport */
-      display:flex;
-      flex-direction:column;
     }
 
-    /* animated background */
-    @keyframes moveLights{
-      0%{background-position:16% 30%,82% 74%}
-      50%{background-position:58% 36%,28% 80%}
-      100%{background-position:20% 26%,76% 68%}
-    }
-    body::before,body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-    }
-    body::before{
-      background-image:
-        radial-gradient(900px 700px at 22% 30%, rgba(124,156,255,.16), rgba(124,156,255,0) 60%),
-        radial-gradient(1100px 800px at 78% 70%, rgba(98,230,179,.12), rgba(98,230,179,0) 62%);
-      background-repeat:no-repeat;
-      background-size:140% 140%,160% 160%;
-      background-position:18% 28%,82% 72%;
-      animation:moveLights 24s ease-in-out infinite alternate;
-      mix-blend-mode:screen;
-      opacity:.9;
-    }
-    body::after{
-      background:radial-gradient(ellipse at center,
-        rgba(0,0,0,0) 55%,
-        rgba(0,0,0,.35) 80%,
-        rgba(0,0,0,.65) 100%);
-    }
-
-    header {
+    header{
       background:rgba(12,14,18,.9);
       border-bottom:1px solid rgba(255,255,255,.05);
-      padding:10px 20px;
+      padding:10px 18px;
       position:sticky;
       top:0;
       z-index:10;
       backdrop-filter:blur(10px);
     }
-    nav a {
-      color:var(--ink);
+
+    nav a{
+      color:#ffffff;
       text-decoration:none;
-      font-weight:600;
       margin-right:14px;
-      position:relative;
-      display:inline-block;
-      transition:color .3s ease, transform .3s ease;
-      font-size:14px;
-    }
-    nav a.active{
-      color:var(--accent-2);
+      font-weight:600;
+      font-size:13px;
     }
 
-    .hero {
+    nav a.active{ color:var(--accent-2); }
+
+    .container{
+      max-width:900px;
+      margin:10px auto 0;
+      padding:0 18px;
       text-align:center;
-      max-width:800px;
-      margin:8px auto 0;
-      padding:0 16px;
-      position:relative;
-      z-index:1;
+      height:80vh;                 /* space under header */
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      overflow:hidden;
+    }
+
+    h1{
+      font-size:22px;
+      margin:4px 0;
+      font-weight:800;
+    }
+
+    .subtitle{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 8px;
+    }
+
+    .cards{
       flex:1;
       display:flex;
       flex-direction:column;
-      align-items:center;
-    }
-    h1 {
-      font-size:26px;
-      margin:6px 0 4px;
-    }
-    .subtitle {
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:8px;
-    }
-    .divider {
-      height:2px;
-      width:55%;
-      margin:6px auto 10px;
-      background:linear-gradient(to right,var(--accent),var(--accent-2));
-      border:none;
-      border-radius:2px;
+      gap:6px;
+      overflow:hidden;
     }
 
-    .entry {
-      margin:6px auto 0;
-      padding:10px 12px;
-      max-width:650px;
-      background:rgba(15,17,22,0.9);
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.10);
-      display:flex;
-      position:relative;
-      z-index:1;
-      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-      cursor:default;
-    }
-    .logo-box {
-      width:48px;
-      height:48px;
-      border-radius:12px;
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.18);
-      margin-right:12px;
+    .entry{
       display:flex;
       align-items:center;
-      justify-content:center;
-      font-size:10px;
-      font-weight:700;
-      text-align:center;
-      color:var(--ink);
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      padding:8px 10px;
+      min-height:52px;
       overflow:hidden;
-      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
+
+    .logo-box{
+      width:40px;
+      height:40px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.18);
+      margin-right:10px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      font-size:16px;
+    }
+
     .logo-box img{
       width:100%;
       height:100%;
       object-fit:contain;
       display:block;
     }
-    .entry:hover {
-      transform:translateY(-3px);
-      box-shadow:0 8px 22px rgba(0,0,0,0.6);
-      border-color:rgba(124,156,255,0.6);
+
+    .entry-text{
+      text-align:left;
+      font-size:11px;
+      line-height:1.2;
     }
-    .entry:hover .logo-box{
-      box-shadow:0 0 16px rgba(124,156,255,.7);
-      border-color:rgba(124,156,255,.85);
-      transform:scale(1.04) rotate(2deg);
-    }
-    .entry-text { text-align:left; }
-    .title {
-      font-size:16px;
+
+    .title{
+      font-size:13px;
       font-weight:700;
       color:var(--accent-2);
       margin-bottom:2px;
     }
-    .meta {
-      font-size:12px;
+
+    .meta{
+      font-size:11px;
       color:var(--muted);
-      margin-bottom:3px;
-    }
-    .desc {
-      font-size:13px;
       margin:0;
     }
 
-    .clickable-video {
-      cursor:pointer;
-    }
-
-    .btn-row {
-      margin-top:12px;
+    .btn-row{
+      margin-top:6px;
       display:flex;
-      gap:10px;
       justify-content:center;
+      gap:8px;
     }
 
-    .nav-btn {
-      text-decoration:none;
+    .nav-btn{
+      padding:6px 16px;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      padding:9px 20px;
       border-radius:10px;
+      text-decoration:none;
       color:#0b0e12;
       font-weight:700;
-      display:inline-block;
-      box-shadow:0 4px 14px rgba(0,0,0,.4);
-      font-size:14px;
-    }
-
-    footer {
-      text-align:center;
-      color:var(--muted);
-      margin:4px 0 4px;
-      font-size:11px;
-      padding:2px 0;
-      border-top:1px solid rgba(255,255,255,.06);
-      position:relative;
-      z-index:1;
-    }
-
-    /* allow scroll only on small screens */
-    @media (max-width: 900px) {
-      body {
-        height:auto;
-        overflow-y:auto;
-      }
-      .hero {
-        margin-top:12px;
-      }
-      .entry {
-        max-width:100%;
-      }
+      font-size:12px;
+      box-shadow:0 4px 14px rgba(0,0,0,.45);
     }
   </style>
 </head>
+
 <body>
   <header>
     <nav>
@@ -241,70 +158,52 @@
     </nav>
   </header>
 
-  <section class="hero">
+  <div class="container">
     <h1>Extra-Curricular Activities</h1>
     <p class="subtitle">Activities supporting my growth in IT, cybersecurity, and teamwork.</p>
-    <hr class="divider">
 
-    <!-- Cybersecurity self-study (Kali) -->
-    <div class="entry">
-      <div class="logo-box"><img src="Kali.jpeg" alt="Kali Linux Logo"></div>
-      <div class="entry-text">
-        <div class="title">Cybersecurity Self-Study</div>
-        <p class="meta">Kali Linux · Basic penetration testing tools</p>
-        <p class="desc">
-          I explore Kali Linux and security-focused tools to understand how attacks work and how systems can be defended,
-          supporting my goal in ethical hacking and network security.
-        </p>
+    <div class="cards">
+      <!-- Cybersecurity self-study -->
+      <div class="entry">
+        <div class="logo-box"><img src="Kali.jpeg" alt="Kali Linux"></div>
+        <div class="entry-text">
+          <div class="title">Cybersecurity Self-Study</div>
+          <p class="meta">Kali Linux · Basic penetration testing tools</p>
+        </div>
+      </div>
+
+      <!-- Udemy courses -->
+      <div class="entry">
+        <div class="logo-box"><img src="Udemy.png" alt="Udemy"></div>
+        <div class="entry-text">
+          <div class="title">Online Cybersecurity Courses</div>
+          <p class="meta">Website Hacking · Ethical Hacking · Python for Ethical Hacking</p>
+        </div>
+      </div>
+
+      <!-- Programming practice -->
+      <div class="entry">
+        <div class="logo-box"><img src="Python.png" alt="Python"></div>
+        <div class="entry-text">
+          <div class="title">Programming & IT Practice</div>
+          <p class="meta">Python · HTML · CSS · Networking basics</p>
+        </div>
+      </div>
+
+      <!-- Gaming -->
+      <div class="entry" onclick="window.open('gaming_video.mp4','_blank')">
+        <div class="logo-box">🎮</div>
+        <div class="entry-text">
+          <div class="title">Gaming</div>
+          <p class="meta">Strategy & team-based gameplay to build focus and quick decision-making.</p>
+        </div>
       </div>
     </div>
 
-    <!-- Udemy courses -->
-    <div class="entry">
-      <div class="logo-box"><img src="Udemy.png" alt="Udemy Logo"></div>
-      <div class="entry-text">
-        <div class="title">Online Cybersecurity Courses (Udemy)</div>
-        <p class="meta">
-          Website Hacking &amp; Penetration Testing · Learning Ethical Hacking from Scratch ·
-          Python for Ethical Hacking · Cybersecurity Course for Beginners
-        </p>
-        <p class="desc">
-          I take structured online courses to build a solid foundation in cybersecurity concepts, tools, and techniques.
-        </p>
-      </div>
-    </div>
-
-    <!-- Programming / IT practice (Python) -->
-    <div class="entry">
-      <div class="logo-box"><img src="Python.png" alt="Python Logo"></div>
-      <div class="entry-text">
-        <div class="title">Independent Programming &amp; IT Practice</div>
-        <p class="meta">Python · HTML · CSS · Networking basics</p>
-        <p class="desc">
-          Outside of class, I work on small practice tasks and review networking concepts to reinforce what I learn in my BSIT program.
-        </p>
-      </div>
-    </div>
-
-    <!-- Gaming clickable video -->
-    <div class="entry clickable-video" onclick="window.open('gaming_video.mp4', '_blank')">
-      <div class="logo-box">🎮</div>
-      <div class="entry-text">
-        <div class="title">Gaming</div>
-        <p class="meta">Strategy · Competitive · Cooperative</p>
-        <p class="desc">
-          Click to view gameplay highlights that helped develop quick decision-making, focus, and teamwork skills.
-        </p>
-      </div>
-    </div>
-
-    <!-- Previous / Next buttons -->
     <div class="btn-row">
       <a class="nav-btn" href="Education.html">← Previous</a>
       <a class="nav-btn" href="MyFamily.html">Next → My Family</a>
     </div>
-  </section>
-
-  <footer>© 2025 Kazler Carl Flores Umaging</footer>
+  </div>
 </body>
 </html>
