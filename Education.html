@@ -7,6 +7,7 @@
   <meta name="description" content="Educational background of Kazler Carl Flores Umaging">
   <meta name="theme-color" content="#0d1117">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --accent:#7c9cff;
@@ -16,23 +17,29 @@
       --bg:#0b0e12;
     }
 
-    html { scroll-behavior:smooth; }
+    html { height:100%; }
+
     body {
       margin:0;
-      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      font-family:'Inter', sans-serif;
       background:var(--bg);
       color:var(--ink);
+      height:100vh;              /* lock height */
+      overflow-y:hidden;         /* remove scrolling */
       overflow-x:hidden;
       position:relative;
+      display:flex;
+      flex-direction:column;
     }
 
-    /* animated background */
+    /* background animation */
     @keyframes moveLights{
       0%{background-position:16% 30%,82% 74%}
       50%{background-position:58% 36%,28% 80%}
       100%{background-position:20% 26%,76% 68%}
     }
-    body::before,body::after{
+
+    body::before, body::after{
       content:"";
       position:fixed;
       inset:0;
@@ -52,167 +59,174 @@
     body::after{
       background:radial-gradient(ellipse at center,
         rgba(0,0,0,0) 55%,
-        rgba(0,0,0,.35) 80%,
-        rgba(0,0,0,.65) 100%);
+        rgba(0,0,0,0.35) 80%,
+        rgba(0,0,0,0.65) 100%);
     }
 
     header {
       background:rgba(12,14,18,.9);
       border-bottom:1px solid rgba(255,255,255,.05);
-      padding:14px 28px;
+      padding:10px 20px;
       position:sticky;
       top:0;
       backdrop-filter:blur(10px);
       z-index:10;
     }
-    nav a{
+
+    nav a {
       color:var(--ink);
       text-decoration:none;
-      margin-right:18px;
+      margin-right:14px;
       font-weight:600;
-      transition:.3s ease;
+      font-size:14px;
     }
-    nav a:hover,
     nav a.active { color:var(--accent-2); }
 
     .hero {
       text-align:center;
-      max-width:800px;
-      margin:48px auto;
+      max-width:720px;
+      margin:10px auto;
+      padding:0 16px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      align-items:center;
       position:relative;
       z-index:1;
-      padding:0 20px;
     }
-    h1 { font-size:clamp(32px,6vw,48px); margin-bottom:8px; }
-    .subtitle { color:var(--muted); font-size:14px; margin-bottom:10px; }
+
+    h1 { font-size:26px; margin:6px 0; }
+    .subtitle { color:var(--muted); font-size:13px; margin:4px 0 10px; }
     .divider {
-      height:2px; width:60%; margin:14px auto 24px;
+      height:2px; width:55%; margin:8px auto 10px;
       background:linear-gradient(to right,var(--accent),var(--accent-2));
-      border-radius:2px;
-      border:none;
+      border-radius:2px; border:none;
     }
 
     .entry {
-      margin:16px auto;
-      padding:16px 18px;
-      max-width:650px;
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:14px;
+      padding:8px 10px;
+      margin:6px auto;
+      max-width:600px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:12px;
       display:flex;
       align-items:center;
     }
+
     .logo-box {
-      width:54px;
-      height:54px;
-      border-radius:12px;
+      width:44px;
+      height:44px;
+      border-radius:10px;
       background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.18);
-      margin-right:14px;
+      margin-right:10px;
       display:flex;
       align-items:center;
       justify-content:center;
       overflow:hidden;
     }
+
     .logo-box img {
       width:100%;
       height:100%;
       object-fit:contain;
-      border-radius:10px;
       display:block;
     }
-    .school {
-      font-size:18px;
-      font-weight:700;
-      color:var(--accent-2);
-    }
-    .meta { font-size:13px; color:var(--muted); margin:0; }
 
-    .next-btn{
-      display:inline-block;
-      margin-top:30px;
-      padding:14px 26px;
+    .school { font-size:15px; font-weight:700; color:var(--accent-2); text-align:left; }
+    .meta { font-size:12px; color:var(--muted); margin:0; text-align:left; }
+
+    .btn-row {
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .nav-btn {
+      padding:9px 20px;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
       color:#0b0e12;
-      border-radius:12px;
+      border-radius:10px;
       font-weight:700;
-      box-shadow:0 6px 20px rgba(0,0,0,.4);
       text-decoration:none;
-      transition:.25s ease;
-    }
-    .next-btn:hover{
-      transform:translateY(-3px);
-      box-shadow:0 10px 26px rgba(0,0,0,.6);
+      font-size:14px;
+      box-shadow:0 4px 14px rgba(0,0,0,.4);
     }
 
-    footer{
+    footer {
       text-align:center;
-      margin:24px 0 16px;
+      font-size:11px;
       color:var(--muted);
-      font-size:13px;
+      padding:4px 0;
+      border-top:1px solid rgba(255,255,255,0.06);
     }
+
   </style>
 </head>
 
 <body>
+
 <header>
   <nav>
     <a href="kazler_starter_pack.html">Home</a>
     <a class="active" href="#">Education</a>
     <a href="Extra-Curricular.html">Extra-Curricular</a>
+    <a href="MyFamily.html">My Family</a>
+    <a href="MyBatchmates.html">My Batchmates</a>
   </nav>
 </header>
 
 <section class="hero">
+
   <h1>Educational Attainment</h1>
-  <p class="subtitle">A quick overview of my basic education and current college program.</p>
+  <p class="subtitle">A quick overview of my education.</p>
   <hr class="divider">
 
-  <!-- College -->
+  <!-- COLLEGE -->
   <div class="entry">
-    <div class="logo-box">
-      <img src="UC LOGO.png" alt="University of the Cordilleras Logo">
-    </div>
+    <div class="logo-box"><img src="UC LOGO.png"></div>
     <div>
       <div class="school">BSIT – Network & Security</div>
       <p class="meta">University of the Cordilleras · 2025 – Present</p>
     </div>
   </div>
 
-  <!-- Senior High -->
+  <!-- SHS -->
   <div class="entry">
-    <div class="logo-box">
-      <img src="Slu Senior.jpeg" alt="Saint Louis University Senior High School Logo">
-    </div>
+    <div class="logo-box"><img src="Slu Senior.jpeg"></div>
     <div>
-      <div class="school">Senior High – STEM Strand</div>
-      <p class="meta">Saint Louis University Senior High School · Graduated 2025</p>
+      <div class="school">Senior High – STEM</div>
+      <p class="meta">Saint Louis University Senior High School · 2025</p>
     </div>
   </div>
 
-  <!-- Junior High -->
+  <!-- JHS -->
   <div class="entry">
-    <div class="logo-box">
-      <img src="SLU High.png" alt="Saint Louis University Junior High School Logo">
-    </div>
+    <div class="logo-box"><img src="SLU High.png"></div>
     <div>
       <div class="school">Junior High School</div>
       <p class="meta">Saint Louis University Junior High School</p>
     </div>
   </div>
 
-  <!-- Elementary -->
+  <!-- ELEMENTARY -->
   <div class="entry">
-    <div class="logo-box">
-      <img src="Slu elem.jpeg" alt="Saint Louis University Laboratory Elementary School Logo">
-    </div>
+    <div class="logo-box"><img src="Slu elem.jpeg"></div>
     <div>
       <div class="school">Elementary</div>
       <p class="meta">SLU – Laboratory Elementary School</p>
     </div>
   </div>
 
-  <a class="next-btn" href="Extra-Curricular.html">Next → Extra-Curricular</a>
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <a class="nav-btn" href="kazler_starter_pack.html">← Previous</a>
+    <a class="nav-btn" href="Extra-Curricular.html">Next → Extra-Curricular</a>
+  </div>
+
 </section>
 
 <footer>© 2025 Kazler Carl Flores Umaging</footer>
