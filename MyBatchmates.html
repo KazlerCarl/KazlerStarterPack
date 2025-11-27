@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Batchmates – Kazler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent:#ff5fd7;
+      --accent-2:#62e6b3;
+      --muted:#d5d5e0;
+      --ink:#ffffff;
+      --bg:#0b0e12;
+    }
+
+    html, body{
+      margin:0;
+      padding:0;
+      height:100%;
+      overflow-y:auto; /* allow internal scroll */
+      font-family:'Inter',sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
+
+    header{
+      background:rgba(12,14,18,.9);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      padding:12px 22px;
+      position:sticky;
+      top:0;
+      backdrop-filter:blur(10px);
+      z-index:10;
+    }
+
+    nav a{
+      color:#ffffff;
+      text-decoration:none;
+      margin-right:16px;
+      font-weight:600;
+    }
+
+    nav a.active{ color:var(--accent-2); }
+
+    .container{
+      max-width:1200px;
+      margin:20px auto;
+      padding:0 20px;
+      text-align:center;
+      height:75vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+
+    h1{
+      font-size:28px;
+      margin-bottom:4px;
+      font-weight:800;
+    }
+
+    .subtitle{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+
+    .photo-box{
+      background:rgba(255,255,255,0.05);
+      padding:10px;
+      border-radius:16px;
+      width:100%;
+      margin-bottom:12px;
+    }
+
+    .photo-box img{
+      width:100%;
+      height:30vh;
+      object-fit:cover;
+      border-radius:12px;
+      display:block;
+    }
+
+    .name-list{
+      background:rgba(255,255,255,0.05);
+      padding:15px;
+      border-radius:16px;
+      width:95%;
+      margin:0 auto;
+      box-shadow:0 8px 24px rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.08);
+      flex:1;
+      overflow:hidden;
+    }
+
+    .columns{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:6px;
+      text-align:left;
+      font-size:7px;
+      line-height:0.9;
+    }
+
+    .btn-row{
+      margin-top:10px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .nav-btn{
+      padding:8px 18px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      border-radius:10px;
+      text-decoration:none;
+      color:#0b0e12;
+      font-weight:700;
+      font-size:13px;
+      box-shadow:0 6px 20px rgba(0,0,0,.45);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="kazler_starter_pack.html">Home</a>
+      <a href="Education.html">Education</a>
+      <a href="Extra-Curricular.html">Extra-Curricular</a>
+      <a href="MyFamily.html">My Family</a>
+      <a href="#" class="active">My Batchmates</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>My Batchmates of 2025–2029</h1>
+    <p class="subtitle">My blockmates of College in the CICS department 1A as I.T. Specialists</p>
+
+    <div class="photo-box">
+      <img src="Batch.png" alt="Batchmates Photo">
+    </div>
+
+    <div class="name-list">
+      <div class="columns">
+        <p>Abance Alvin</p><p>Abiado Mark Jhon</p><p>Bacun Johanna Christine</p><p>Bangguiyao Mark Kevin</p>
+        <p>Barrioga Esteban Jr</p><p>Bekisan Shania Faith</p><p>Bucatan Jannyl</p><p>Bullagay Hezekiah</p>
+        <p>Castellano Katherine Nicolle</p><p>Celino Lawrence Dave</p><p>Costina Eugene Rey</p><p>Dulnuan Jessie</p>
+        <p>Ekwasen Jan Mark</p><p>Estepa Bency Blue</p><p>Fernandez Sam Archer</p><p>Kindahan Joshua</p>
+        <p>Licupa Jeremie Craig</p><p>Lisking Gyahn</p><p>Lunag Azriel Jared</p><p>Markub Justin</p>
+        <p>Nagen Ivan Troy</p><p>Navarro Issey Miyake</p><p>Noventa Glaiza Mae</p><p>Onnon Brian Bruce</p>
+        <p>Padios Jimuel</p><p>Panelo Prince Marky</p><p>Panes Ralph Matthew</p><p>Patauag Jehnnie Lyn</p>
+        <p>Quintinita Lanz Jyro</p><p>Quiros Jeca</p><p>Requiero Jay-R</p><p>Rico, Inigo</p>
+        <p>Sagapen, Benjamin</p><p>San Pedro, Ralph Matthew</p><p>Santiago, Arthur John</p><p>Sarmiento, Justine Von</p>
+        <p>Soley, Lean Jobelle</p><p>Tacio, Reyan</p><p>Talic, Karianne Clarisse</p><p>Umaging, Kazler Carl</p>
+        <p>Ventura, Jamal</p>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <a class="nav-btn" href="MyFamily.html">← Previous</a>
+      <a class="nav-btn" href="kazler_starter_pack.html">Home</a>
+    </div>
+  </div>
+</body>
+</html>
