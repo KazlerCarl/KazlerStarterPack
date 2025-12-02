@@ -14,29 +14,32 @@
       --muted: #a6adbb;
       --ink: #e9ecf2;
       --bg: #0b0e12;
+      --panel: rgba(10,13,18,0.9);
     }
 
-    html { height:100%; }
+    html { height: 100%; }
 
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--ink);
-      height: 100vh;             /* lock to screen height */
-      overflow-y: hidden;        /* REMOVE SCROLLING */
+      height: 100vh;          /* lock to screen height */
+      overflow-y: hidden;     /* no scroll on desktop */
       overflow-x: hidden;
       position: relative;
       display: flex;
       flex-direction: column;
     }
 
+    /* BACKGROUND LIGHT ANIMATION */
     @keyframes moveLights {
       0% { background-position: 16% 30%, 82% 74%; }
       50% { background-position: 58% 36%, 28% 80%; }
       100% { background-position: 20% 26%, 76% 68%; }
     }
-    body::before, body::after {
+    body::before,
+    body::after {
       content:"";
       position: fixed;
       inset: 0;
@@ -61,22 +64,57 @@
         rgba(0,0,0,0.65) 100%);
     }
 
+    /* SIDE LABELS ON LEFT/RIGHT */
+    .side-label {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(166,173,187,0.55);
+      z-index: 1;
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .side-label::before {
+      content: "";
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(166,173,187,0.7));
+    }
+    .side-label.right::before {
+      background: linear-gradient(90deg, rgba(166,173,187,0.7), transparent);
+    }
+    .side-label.left {
+      left: 16px;
+    }
+    .side-label.right {
+      right: 16px;
+      transform: translateY(-50%) rotate(90deg);
+    }
+
+    /* HEADER */
     header {
-      background: rgba(12,14,18,0.9);
+      background: rgba(12,14,18,0.95);
       border-bottom: 1px solid rgba(255,255,255,.05);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
       z-index: 10;
-      padding: 10px 0;
+      padding: 6px 0;
+      flex-shrink: 0;
+      animation: fadeDown 0.5s ease-out;
     }
     .nav-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1100px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 0 22px;
+      padding: 0 32px;
     }
     .brand {
       font-weight: 700;
@@ -86,11 +124,12 @@
       align-items: center;
     }
     .logo {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 8px;
       background: linear-gradient(135deg,var(--accent),var(--accent-2));
       box-shadow: 0 0 12px rgba(98,230,179,.6);
+      animation: pulseLogo 3s ease-in-out infinite;
     }
 
     nav a {
@@ -99,90 +138,277 @@
       font-weight: 600;
       margin-left: 14px;
       font-size: 14px;
+      transition: color 0.2s ease;
       position: relative;
     }
+    nav a:hover { color: var(--accent-2); }
     nav a.active { color: var(--accent-2); }
 
+    /* TOP STRIP CHIPS */
+    .top-strip {
+      max-width: 1400px;
+      margin: 4px auto 0;
+      padding: 0 32px 2px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+    }
+    .chip {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8,11,16,0.9);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(6px);
+    }
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center,var(--accent-2),transparent);
+    }
+
+    /* SUMMARY BOX */
+    .summary-box {
+      max-width: 1400px;
+      margin: 6px auto 0;
+      padding: 10px 32px;
+      background: rgba(12,14,18,0.75);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      animation: fadeUp 0.7s ease-out;
+      color: var(--ink);
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+    }
+    .summary-title {
+      margin: 0 0 4px;
+      font-size: 15px;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+    .summary-text {
+      margin: 0;
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    /* MAIN HERO SECTION (2 rows: main + skills band) */
     .hero {
       flex: 1;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      max-width: 900px;
-      margin: 5px auto 0;
-      padding: 0 18px;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "text card"
+        "skills skills";
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px 32px 4px;
       align-items: center;
-      gap: 20px;
+      column-gap: 32px;
+      row-gap: 10px;
       position: relative;
       z-index: 1;
+      min-height: 0;
     }
 
-    h1 {
-      font-size: 32px;
-      margin: 0;
+    .hero-text {
+      grid-area: text;
+      animation: fadeUp 0.7s ease-out 0.15s both;
     }
+
     .kicker {
       color: var(--accent-2);
       font-size: 14px;
       margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
+    h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
     .divider {
       height: 2px;
       background: linear-gradient(to right, var(--accent), var(--accent-2));
+      margin: 8px 0 10px;
       border: none;
-      border-radius: 2px;
-      margin: 10px 0;
     }
+
     .lede {
-      font-size: 14px;
-      line-height: 1.4;
-      margin-bottom: 8px;
       color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      max-width: 720px;
     }
 
     .card {
-      width: 260px;
-      height: 300px;
+      grid-area: card;
+      width: 290px;
+      height: 330px;
       background: linear-gradient(135deg,var(--accent),var(--accent-2));
       padding: 4px;
       border-radius: 14px;
-      box-shadow:0 10px 25px rgba(0,0,0,.5);
-      justify-self:center;
+      justify-self: center;
+      animation: fadeRight 0.7s ease-out 0.25s forwards, floatCard 4s ease-in-out 1s infinite alternate;
+      opacity: 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,.6);
     }
     .thumb {
-      width:100%; height:100%; border-radius:12px; overflow:hidden;
+      width:100%;
+      height:100%;
+      overflow: hidden;
+      border-radius:12px;
     }
-    .thumb img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
+    .thumb img {
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      border-radius:12px;
+    }
 
     .next-btn {
-      display: inline-block;
       margin-top: 10px;
-      padding: 10px 22px;
+      padding: 9px 20px;
       background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      border-radius: 10px;
       color: #0b0e12;
       font-weight: 700;
-      border-radius: 10px;
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       box-shadow: 0 4px 14px rgba(0,0,0,.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.55);
+      filter: brightness(1.05);
+    }
+    .next-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(0,0,0,.45);
     }
 
+    /* SKILLS BAND */
+    .skills-band {
+      grid-area: skills;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+      font-size: 13px;
+    }
+    .skill-box {
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 9px 11px;
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+      color: var(--muted);
+      min-height: 68px;
+    }
+    .skill-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-2);
+      margin-bottom: 3px;
+    }
+    .skill-text {
+      margin: 0;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    /* FOOTER */
     footer {
       text-align: center;
-      padding: 6px 0;
       font-size: 12px;
       color: var(--muted);
+      padding: 4px 0 6px;
       border-top: 1px solid rgba(255,255,255,.06);
+      flex-shrink: 0;
+      background: rgba(12,14,18,0.95);
+      animation: fadeUp 0.5s ease-out 0.2s both;
+      position: relative;
+      z-index: 1;
     }
 
-    @media(max-width: 900px){
-      body { overflow-y: auto; height:auto; }
-      .hero { grid-template-columns:1fr; text-align:center; }
-      .card { margin:0 auto; }
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(10px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes fadeRight {
+      from { opacity:0; transform: translateX(14px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity:0; transform: translateY(-10px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes floatCard {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    @keyframes pulseLogo {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.05); }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
+
+    @media(max-width:900px){
+      body{
+        overflow-y:auto;   /* allow scroll on small screens only */
+        height:auto;
+      }
+      .nav-container,
+      .top-strip,
+      .summary-box,
+      .hero{
+        max-width: 100%;
+        padding: 0 18px;
+      }
+      .hero{
+        grid-template-columns:1fr;
+        grid-template-rows:auto auto auto;
+        grid-template-areas:
+          "text"
+          "card"
+          "skills";
+        text-align:center;
+      }
+      .card{ margin:0 auto; }
+      .summary-box{ margin-top: 6px; }
+      .skills-band{ margin-top: 10px; }
+      .side-label{ display:none; } /* hide side labels on small screens */
+    }
   </style>
 </head>
+
 <body>
+  <!-- side labels for extra design on left/right edges -->
+  <div class="side-label left">Portfolio • 2025</div>
+  <div class="side-label right">BSIT • Network & Security</div>
+
   <header>
     <div class="nav-container">
       <div class="brand"><span class="logo"></span> Kazler Carl Flores Umaging</div>
@@ -196,18 +422,71 @@
     </div>
   </header>
 
+  <section class="top-strip">
+    <div class="chip"><span class="chip-dot"></span> 1st Year College</div>
+    <div class="chip"><span class="chip-dot"></span> BSIT – Network and Security</div>
+    <div class="chip"><span class="chip-dot"></span> Kali Linux Beginner</div>
+    <div class="chip"><span class="chip-dot"></span> HTML • CSS • Java</div>
+  </section>
+
+  <section class="summary-box">
+    <h3 class="summary-title">Student Profile</h3>
+    <p class="summary-text">
+      I am an IT student interested in cybersecurity, networking, and how systems work behind the scenes.
+      My goal is to improve my skills in ethical hacking, system protection, and secure network configuration.
+      I am slowly building my foundation by exploring different tools, coding languages, and security-focused environments.
+    </p>
+  </section>
+
   <section class="hero">
-    <div>
+    <div class="hero-text">
       <div class="kicker">BSIT – Network and Security</div>
       <h1>Hi, I'm <span style="color:var(--accent);">Kazler Carl Flores Umaging</span></h1>
       <hr class="divider">
-      <p class="lede">I’m a freshman BSIT Network and Security student focusing on networking, cybersecurity, and programming.</p>
-      <p class="lede">I’m currently learning ethical hacking tools like <strong>Kali Linux</strong> and taking online cybersecurity courses to build my skills.</p>
-      <a href="Education.html" class="next-btn">Next → Educational-Attainment</a>
+
+      <p class="lede">
+        I’m a freshman BSIT Network and Security student focusing on networking, cybersecurity, and programming.
+      </p>
+
+      <p class="lede">
+        I have gained initial experience exploring <strong>Kali Linux</strong>, a penetration testing and security-focused
+        operating system, which sparked my interest in cybersecurity. This exposure made me more curious about how systems
+        work, how they fail, and how they can be secured.
+      </p>
+
+      <p class="lede">
+        I’m currently developing my skills in networking, cybersecurity, and programming as I continue my studies and work
+        on personal learning projects.
+      </p>
+
+      <a href="Education.html" class="next-btn">Next → Educational Attainment</a>
     </div>
 
     <div class="card">
-      <div class="thumb"><img src="kazler1.JPG" alt="Kazler Profile Picture"></div>
+      <div class="thumb">
+        <img src="kazler1.JPG" alt="Kazler Profile Picture">
+      </div>
+    </div>
+
+    <div class="skills-band">
+      <div class="skill-box">
+        <div class="skill-title">Technical Skills</div>
+        <p class="skill-text">
+          Basic knowledge of computer hardware, operating systems, and networking fundamentals, with hands-on experience troubleshooting simple issues.
+        </p>
+      </div>
+      <div class="skill-box">
+        <div class="skill-title">Cybersecurity & Tools</div>
+        <p class="skill-text">
+          Beginner experience with <strong>Kali Linux</strong>, networking commands, and security concepts such as vulnerabilities, exploits, and safe testing.
+        </p>
+      </div>
+      <div class="skill-box">
+        <div class="skill-title">Personal Strengths</div>
+        <p class="skill-text">
+          Curious, patient, and willing to learn by doing. I like exploring how systems work, solving problems step-by-step, and improving through practice.
+        </p>
+      </div>
     </div>
   </section>
 
