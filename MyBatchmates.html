@@ -12,156 +12,408 @@
       --muted:#d5d5e0;
       --ink:#ffffff;
       --bg:#0b0e12;
+      --panel:rgba(10,10,16,0.98);
     }
 
-    html, body{
+    html { height:100%; }
+
+    body{
       margin:0;
       padding:0;
-      height:100%;
-      overflow-y:auto; /* allow internal scroll */
+      height:100vh;
+      overflow:hidden;         /* no scroll at 100% zoom on desktop */
       font-family:'Inter',sans-serif;
       background:var(--bg);
       color:var(--ink);
+      position:relative;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* subtle moving background like other pages */
+    @keyframes moveLights{
+      0%{background-position:10% 18%, 90% 80%}
+      50%{background-position:40% 24%, 60% 76%}
+      100%{background-position:16% 20%, 84% 70%}
+    }
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::before{
+      background-image:
+        radial-gradient(900px 550px at 14% 8%, rgba(255,95,215,.38), transparent 60%),
+        radial-gradient(1100px 700px at 86% 78%, rgba(98,230,179,.25), transparent 62%);
+      background-repeat:no-repeat;
+      background-size:140% 140%, 150% 150%;
+      animation:moveLights 26s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+      opacity:0.85;
+    }
+    body::after{
+      background:radial-gradient(ellipse at center,
+        rgba(0,0,0,0) 55%,
+        rgba(0,0,0,.38) 80%,
+        rgba(0,0,0,.7) 100%);
+    }
+
+    /* decorative side fills */
+    .side-label{
+      position:fixed;
+      top:50%;
+      transform:translateY(-50%) rotate(-90deg);
+      font-size:11px;
+      letter-spacing:0.24em;
+      text-transform:uppercase;
+      color:rgba(213,213,224,0.6);
+      z-index:1;
+      pointer-events:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      opacity:0;
+    }
+    .side-label::before{
+      content:"";
+      width:60px;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(213,213,224,0.85));
+    }
+    .side-label.right::before{
+      background:linear-gradient(90deg,rgba(213,213,224,0.85),transparent);
+    }
+    .side-label.left{
+      left:22px;
+      animation:sideSlideLeft 0.7s ease-out 0.3s forwards;
+    }
+    .side-label.right{
+      right:22px;
+      transform:translateY(-50%) rotate(90deg);
+      animation:sideSlideRight 0.7s ease-out 0.3s forwards;
+    }
+
+    @keyframes sideSlideLeft{
+      from{opacity:0; transform:translate(-18px,-50%) rotate(-90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(-90deg);}
+    }
+    @keyframes sideSlideRight{
+      from{opacity:0; transform:translate(18px,-50%) rotate(90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(90deg);}
     }
 
     header{
-      background:rgba(12,14,18,.9);
+      background:rgba(12,14,18,.95);
       border-bottom:1px solid rgba(255,255,255,.05);
-      padding:12px 22px;
+      padding:8px 0;
       position:sticky;
       top:0;
       backdrop-filter:blur(10px);
       z-index:10;
+      opacity:0;
+      transform:translateY(-10px);
+      animation:fadeDown 0.4s ease-out 0.05s forwards;
+    }
+
+    .nav-container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand{
+      font-weight:700;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .logo{
+      width:24px;
+      height:24px;
+      border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 10px rgba(255,95,215,0.8);
+      animation:pulseLogo 3s ease-in-out infinite;
     }
 
     nav a{
       color:#ffffff;
       text-decoration:none;
-      margin-right:16px;
+      margin-left:14px;
       font-weight:600;
+      font-size:14px;
+      transition:color .2s ease;
     }
-
+    nav a:hover{ color:var(--accent-2); }
     nav a.active{ color:var(--accent-2); }
 
-    .container{
-      max-width:1200px;
-      margin:20px auto;
-      padding:0 20px;
-      text-align:center;
-      height:75vh;
+    .hero{
+      flex:1;
       display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
+      align-items:center;
+      justify-content:center;
+      padding:8px 20px 10px;
+      position:relative;
+      z-index:1;
     }
 
-    h1{
-      font-size:28px;
-      margin-bottom:4px;
+    .batch-card{
+      width:100%;
+      max-width:1050px;
+      background:var(--panel);
+      border-radius:22px;
+      padding:18px 26px 14px;
+      box-shadow:0 18px 40px rgba(0,0,0,.75);
+      border:1px solid rgba(255,255,255,0.08);
+      position:relative;
+      overflow:hidden;
+      opacity:0;
+      transform:translateY(14px);
+      animation:fadeUp 0.5s ease-out 0.2s forwards;
+    }
+    .batch-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      padding:1px;
+      background:linear-gradient(135deg,rgba(255,95,215,0.4),rgba(98,230,179,0.3));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:0.85;
+    }
+
+    .batch-title{
+      text-align:center;
+      font-size:26px;
+      margin:2px 0 4px;
       font-weight:800;
     }
-
-    .subtitle{
+    .batch-subtitle{
+      text-align:center;
       font-size:13px;
       color:var(--muted);
-      margin-bottom:12px;
+      margin:0 0 12px;
     }
 
-    .photo-box{
-      background:rgba(255,255,255,0.05);
-      padding:10px;
+    .photo-row{
+      display:grid;
+      grid-template-columns: minmax(0,3.2fr) minmax(0,1.2fr);
+      gap:18px;
+      align-items:stretch;
+      margin-bottom:8px;
+    }
+
+    .batch-photo{
+      background:#050509;
       border-radius:16px;
-      width:100%;
-      margin-bottom:12px;
+      padding:8px;
+      box-shadow:0 10px 26px rgba(0,0,0,.7);
+      border:1px solid rgba(255,255,255,.08);
     }
-
-    .photo-box img{
+    .batch-photo img{
       width:100%;
-      height:30vh;
+      height:260px;
       object-fit:cover;
       border-radius:12px;
       display:block;
     }
 
-    .name-list{
-      background:rgba(255,255,255,0.05);
-      padding:15px;
+    .me-card{
+      background:rgba(8,8,14,0.98);
       border-radius:16px;
-      width:95%;
-      margin:0 auto;
-      box-shadow:0 8px 24px rgba(0,0,0,.55);
-      border:1px solid rgba(255,255,255,.08);
+      padding:10px 10px 12px;
+      box-shadow:0 10px 26px rgba(0,0,0,.7);
+      border:1px solid rgba(255,255,255,.1);
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+    .me-label{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      font-weight:700;
+      color:var(--accent-2);
+      margin-bottom:6px;
+      text-align:center;
+    }
+    .me-sub{
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+      margin-bottom:8px;
+    }
+    .me-photo{
       flex:1;
+      border-radius:12px;
       overflow:hidden;
+      background:#111;
+    }
+    .me-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
-    .columns{
-      display:grid;
-      grid-template-columns:repeat(6,1fr);
-      gap:6px;
-      text-align:left;
-      font-size:7px;
-      line-height:0.9;
+    .names{
+      margin:8px auto 4px;
+      font-size:10px;
+      line-height:1.5;
+      color:var(--muted);
+      max-width:900px;
+      text-align:center;
     }
 
     .btn-row{
-      margin-top:10px;
+      margin-top:6px;
       display:flex;
       justify-content:center;
-      gap:10px;
     }
-
     .nav-btn{
-      padding:8px 18px;
+      padding:7px 22px;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      border-radius:10px;
+      border-radius:999px;
       text-decoration:none;
       color:#0b0e12;
       font-weight:700;
       font-size:13px;
-      box-shadow:0 6px 20px rgba(0,0,0,.45);
+      box-shadow:0 6px 18px rgba(0,0,0,.5);
+      transition:transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+    .nav-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 9px 22px rgba(0,0,0,.7);
+      filter:brightness(1.05);
+    }
+
+    footer{
+      text-align:center;
+      font-size:11px;
+      padding:4px 0 6px;
+      color:#c7c7d8;
+      border-top:1px solid rgba(255,255,255,.06);
+      background:rgba(12,14,18,0.96);
+      position:relative;
+      z-index:1;
+    }
+
+    /* animations */
+    @keyframes fadeDown{
+      from{opacity:0; transform:translateY(-12px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(14px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes pulseLogo{
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.05);}
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
+
+    @media(max-width:900px){
+      body{
+        height:auto;
+        overflow-y:auto;      /* allow scroll on smaller screens */
+      }
+      .hero{
+        padding:10px 12px 14px;
+      }
+      .batch-card{
+        padding:14px 14px 12px;
+      }
+      .photo-row{
+        grid-template-columns:1fr;
+      }
+      .batch-photo img{
+        height:auto;
+        max-height:260px;
+      }
+      .side-label{
+        display:none;
+      }
     }
   </style>
 </head>
 
 <body>
+
+  <!-- side fillers -->
+  <div class="side-label left">CICS 1A • IT SPECIALISTS</div>
+  <div class="side-label right">CLASS OF 2025–2029</div>
+
   <header>
-    <nav>
-      <a href="kazler_starter_pack.html">Home</a>
-      <a href="Education.html">Education</a>
-      <a href="Extra-Curricular.html">Extra-Curricular</a>
-      <a href="MyFamily.html">My Family</a>
-      <a href="#" class="active">My Batchmates</a>
-    </nav>
+    <div class="nav-container">
+      <div class="brand">
+        <span class="logo"></span>
+        My Batchmates
+      </div>
+      <nav>
+        <a href="kazler_starter_pack.html">Home</a>
+        <a href="Education.html">Education</a>
+        <a href="Extra-Curricular.html">Extra-Curricular</a>
+        <a href="MyFamily.html">My Family</a>
+        <a href="#" class="active">My Batchmates</a>
+      </nav>
+    </div>
   </header>
 
-  <div class="container">
-    <h1>My Batchmates of 2025–2029</h1>
-    <p class="subtitle">My blockmates of College in the CITCS department 1A as I.T. Specialists</p>
+  <section class="hero">
+    <div class="batch-card">
+      <h1 class="batch-title">The Dyslers</h1>
+      <p class="batch-subtitle">My batchmates of 2025–2029 at University of the Cordilleras, CICS 1A – IT Specialists.</p>
 
-    <div class="photo-box">
-      <img src="Batch.png" alt="Batchmates Photo">
-    </div>
+      <div class="photo-row">
+        <div class="batch-photo">
+          <img src="Batch.png" alt="Batchmates group photo">
+        </div>
 
-    <div class="name-list">
-      <div class="columns">
-        <p>Abance Alvin</p><p>Abiado Mark Jhon</p><p>Bacun Johanna Christine</p><p>Bangguiyao Mark Kevin</p>
-        <p>Barrioga Esteban Jr</p><p>Bekisan Shania Faith</p><p>Bucatan Jannyl</p><p>Bullagay Hezekiah</p>
-        <p>Castellano Katherine Nicolle</p><p>Celino Lawrence Dave</p><p>Costina Eugene Rey</p><p>Dulnuan Jessie</p>
-        <p>Ekwasen Jan Mark</p><p>Estepa Bency Blue</p><p>Fernandez Sam Archer</p><p>Kindahan Joshua</p>
-        <p>Licupa Jeremie Craig</p><p>Lisking Gyahn</p><p>Lunag Azriel Jared</p><p>Markub Justin</p>
-        <p>Nagen Ivan Troy</p><p>Navarro Issey Miyake</p><p>Noventa Glaiza Mae</p><p>Onnon Brian Bruce</p>
-        <p>Padios Jimuel</p><p>Panelo Prince Marky</p><p>Panes Ralph Matthew</p><p>Patauag Jehnnie Lyn</p>
-        <p>Quintinita Lanz Jyro</p><p>Quiros Jeca</p><p>Requiero Jay-R</p><p>Rico, Inigo</p>
-        <p>Sagapen, Benjamin</p><p>San Pedro, Ralph Matthew</p><p>Santiago, Arthur John</p><p>Sarmiento, Justine Von</p>
-        <p>Soley, Lean Jobelle</p><p>Tacio, Reyan</p><p>Talic, Karianne Clarisse</p><p>Umaging, Kazler Carl</p>
-        <p>Ventura, Jamal</p>
+        <div class="me-card">
+          <div class="me-label">Me in the Block</div>
+          <div class="me-sub">A quick snapshot of me.</div>
+          <div class="me-photo">
+            <!-- use whatever solo photo you like here -->
+            <img src="me.jpg" alt="Kazler Carl Umaging">
+          </div>
+        </div>
+      </div>
+
+      <p class="names">
+        Bekisan Shania Faith • Ekwasen Jan Mark • Lunag Azriel Jared • Panelo Prince Marky • Panes Ralph Matthew • Requiero Jay-R •
+        Sagapen Benjamin • Sarmiento Justine Von • Tacio Reyan V. • Ventura Jamal • Abance Alvin • Castellano Katherine Nicolle •
+        Celino Lawrence Dave • Estepa Bency Blue • Markub Justin • Navarro Issey Miyake • Onnon Brian Bruce • Padios Jimuel •
+        Quintinita Lanz Jyro • Quiros Jeca • Soley Lean Jobelle • Bacun Johanna Christine • Bangguiyao Mark Kevin • Bucatan Jannyl •
+        Bullagay Hezekiah • Costina Eugene Rey • Kindahan Joshua • Nagen Ivan Troy • San Pedro Ralph Matthew •
+        Santiago Arthur John • Umaging Kazler Carl • Abiado Mark Jhon • Barrioga Esteban Jr • Dulnuan Jessie •
+        Fernandez Sam Archer • Licupa Jeremie Craig • Lisking Gyahn • Noventa Glaiza Mae • Patauag Jehnnie Lyn •
+        Rico Inigo • Talic Karianne Clarisse • Ventura Jamal
+      </p>
+
+      <div class="btn-row">
+        <a class="nav-btn" href="MyFamily.html">← Previous</a>
       </div>
     </div>
+  </section>
 
-    <div class="btn-row">
-      <a class="nav-btn" href="MyFamily.html">← Previous</a>
-      <a class="nav-btn" href="kazler_starter_pack.html">Home</a>
-    </div>
-  </div>
+  <footer>© 2025 Kazler Carl Flores Umaging</footer>
 </body>
 </html>
