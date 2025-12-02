@@ -14,6 +14,7 @@
       --muted:#d5d5e0;
       --ink:#ffffff;
       --bg:#0b0e12;
+      --panel:rgba(9,9,14,0.96);
     }
 
     html { height:100%; }
@@ -24,12 +25,13 @@
       background:var(--bg);
       color:var(--ink);
       height:100vh;
-      overflow:hidden;
+      overflow:hidden;     /* no scroll on desktop */
       position:relative;
       display:flex;
       flex-direction:column;
     }
 
+    /* background animation */
     @keyframes moveLights{
       0%{background-position:16% 30%,82% 74%}
       50%{background-position:58% 36%,28% 80%}
@@ -44,11 +46,11 @@
     }
     body::before{
       background-image:
-        radial-gradient(900px 700px at 22% 30%, rgba(255,95,215,.18), rgba(255,95,215,0) 60%),
-        radial-gradient(1100px 800px at 78% 70%, rgba(98,230,179,.16), rgba(98,230,179,0) 62%);
+        radial-gradient(900px 700px at 16% 28%, rgba(255,95,215,.23), rgba(255,95,215,0) 60%),
+        radial-gradient(900px 700px at 84% 74%, rgba(98,230,179,.2), rgba(98,230,179,0) 62%);
       background-repeat:no-repeat;
-      background-size:140% 140%,160% 160%;
-      background-position:18% 28%,82% 72%;
+      background-size:140% 140%,150% 150%;
+      background-position:16% 28%,84% 74%;
       animation:moveLights 24s ease-in-out infinite alternate;
       mix-blend-mode:screen;
     }
@@ -59,78 +61,336 @@
         rgba(0,0,0,.65) 100%);
     }
 
+    /* decorative corner orbs */
+    .corner-orb{
+      position:fixed;
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      background:radial-gradient(circle at center,
+        rgba(255,95,215,0.28),
+        transparent 70%);
+      z-index:0;
+      pointer-events:none;
+      filter:blur(1px);
+    }
+    .corner-orb.left-bottom{
+      left:-30px;
+      bottom:-30px;
+    }
+    .corner-orb.right-top{
+      right:-40px;
+      top:60px;
+      background:radial-gradient(circle at center,
+        rgba(98,230,179,0.3),
+        transparent 70%);
+    }
+
+    /* side glows (A) */
+    .side-glow-left, .side-glow-right {
+      position:fixed;
+      top:50%;
+      transform:translateY(-50%);
+      width:300px;
+      height:300px;
+      border-radius:50%;
+      filter:blur(90px);
+      opacity:0.24;
+      pointer-events:none;
+      z-index:0;
+    }
+    .side-glow-left {
+      left:-90px;
+      background:#ff5fd7;
+    }
+    .side-glow-right {
+      right:-90px;
+      background:#62e6b3;
+    }
+
+    /* decorative side labels / quotes (B) */
+    .side-label{
+      position:fixed;
+      top:50%;
+      transform:translateY(-50%) rotate(-90deg);
+      font-size:11px;
+      letter-spacing:0.22em;
+      text-transform:uppercase;
+      color:rgba(213,213,224,0.55);
+      z-index:1;
+      pointer-events:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      opacity:0;
+    }
+    .side-label::before{
+      content:"";
+      width:60px;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(213,213,224,0.75));
+    }
+    .side-label.right::before{
+      background:linear-gradient(90deg,rgba(213,213,224,0.75),transparent);
+    }
+    .side-label.left{
+      left:24px;
+      animation:sideSlideLeft 0.7s ease-out 0.35s forwards;
+    }
+    .side-label.right{
+      right:24px;
+      transform:translateY(-50%) rotate(90deg);
+      animation:sideSlideRight 0.7s ease-out 0.35s forwards;
+    }
+
+    /* header */
     header{
       background:rgba(12,14,18,.9);
       border-bottom:1px solid rgba(255,255,255,.05);
-      padding:10px 20px;
+      padding:6px 0;
       position:sticky;
       top:0;
       z-index:10;
       backdrop-filter:blur(10px);
+      opacity:0;
+      transform:translateY(-10px);
+      animation:fadeDown 0.4s ease-out 0.05s forwards;
     }
+    .nav-container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand{
+      font-weight:700;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .logo{
+      width:24px;
+      height:24px;
+      border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 10px rgba(255,95,215,0.8);
+      animation:pulseLogo 3s ease-in-out infinite;
+    }
+
     nav a{
       color:#f5f5ff;
       text-decoration:none;
       font-weight:600;
-      margin-right:14px;
+      margin-left:14px;
       font-size:14px;
+      transition:color .2s ease;
+    }
+    nav a:hover{ color:var(--accent-2); }
+    nav a.active{ color:var(--accent-2); }
+
+    /* top chips */
+    .top-strip{
+      max-width:1100px;
+      margin:4px auto 0;
+      padding:0 22px 2px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      position:relative;
+      z-index:1;
+      font-size:12px;
+      opacity:0;
+      transform:translateY(6px);
+      animation:fadeUp 0.5s ease-out 0.18s forwards;
+    }
+    .chip{
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(12,12,18,0.95);
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      backdrop-filter:blur(6px);
+    }
+    .chip-dot{
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:radial-gradient(circle at center,var(--accent),transparent);
     }
 
+    /* main area */
     .hero{
       flex:1;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
-      padding:14px 20px 0;
+      padding:4px 20px 0;
       position:relative;
       z-index:1;
     }
 
+    .family-inner{
+      width:100%;
+      max-width:1100px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      opacity:0;
+      transform:translateY(10px);
+      animation:fadeUp 0.5s ease-out 0.28s forwards;
+    }
+
+    /* header card */
     .family-header{
-      max-width:1000px;
       width:100%;
       background:linear-gradient(135deg,#ff5fd7,#8b5dff,#2dd6b7);
       border-radius:18px;
-      padding:18px 26px;
+      padding:14px 22px 12px;
       box-shadow:0 16px 40px rgba(0,0,0,.6);
+      position:relative;
+      overflow:hidden;
+    }
+    .family-header::after{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle at center,rgba(11,14,20,0.15),transparent 60%);
+      bottom:-70px;
+      right:-40px;
+      opacity:0.9;
+      pointer-events:none;
     }
     .family-title{
-      font-size:26px;
+      font-size:24px;
       font-weight:800;
-      margin:0 0 6px;
+      margin:0 0 4px;
     }
     .family-text{
-      font-size:14px;
-      line-height:1.6;
+      font-size:13.5px;
+      line-height:1.5;
+      max-width:640px;
+      margin:0;
     }
 
-    .family-grid{
-      display:flex;
-      gap:26px;
-      justify-content:center;
-      margin-top:26px;
+    /* description row */
+    .desc-row{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
     }
+    .desc-card{
+      background:var(--panel);
+      border-radius:14px;
+      padding:7px 9px;
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:12px;
+      color:var(--muted);
+      position:relative;
+      overflow:hidden;
+    }
+    .desc-title{
+      font-size:12px;
+      font-weight:700;
+      color:var(--accent-2);
+      margin-bottom:2px;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+    .desc-card::before{
+      content:"";
+      position:absolute;
+      inset:auto -20px -35px;
+      height:70px;
+      background:radial-gradient(circle at center,
+        rgba(255,95,215,0.2),
+        transparent 70%);
+      opacity:0.4;
+      pointer-events:none;
+    }
+    .desc-card:nth-child(2)::before{
+      background:radial-gradient(circle at center,
+        rgba(98,230,179,0.22),
+        transparent 70%);
+    }
+    .desc-card:nth-child(3)::before{
+      background:radial-gradient(circle at center,
+        rgba(139,93,255,0.23),
+        transparent 70%);
+    }
+
+    /* main photo grid */
+    .family-gallery{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .family-row{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+    }
+
     .family-card{
-      background:rgba(9,9,14,0.96);
+      background:var(--panel);
       border-radius:18px;
-      padding:14px 14px 16px;
-      width:220px;
+      padding:8px 9px 9px;
+      width:100%;
+      max-width:280px;
       box-shadow:0 14px 30px rgba(0,0,0,.65);
       border:1px solid rgba(255,255,255,0.08);
       text-align:center;
+      position:relative;
+      overflow:hidden;
+      transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
+    .family-card::before{
+      content:"";
+      position:absolute;
+      width:120%;
+      height:60px;
+      top:-30px;
+      left:-10%;
+      background:linear-gradient(90deg,rgba(255,95,215,0.18),rgba(98,230,179,0.12),transparent);
+      opacity:0.22;
+      pointer-events:none;
+    }
+    .family-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 38px rgba(0,0,0,0.85);
+      border-color:rgba(255,95,215,0.9);
+    }
+
     .family-label{
-      font-size:15px;
+      font-size:12px;
       font-weight:800;
-      letter-spacing:1px;
+      letter-spacing:0.1em;
       color:#ffffff;
-      margin-bottom:8px;
+      margin-bottom:4px;
     }
+    .family-name{
+      display:block;
+      font-size:11.5px;
+      font-weight:600;
+      color:var(--muted);
+      margin-top:1px;
+    }
+
     .family-photo{
       width:100%;
-      height:220px;
-      border-radius:14px;
+      height:210px;
+      border-radius:16px;
       overflow:hidden;
       background:#111;
     }
@@ -141,74 +401,263 @@
       display:block;
     }
 
-    .btn-row{
-      margin-top:18px;
+    /* wide family banner – photo + caption (Polaroid style) */
+    .family-banner{
+      width:100%;
+      max-width:800px;
+      margin:10px auto 0;
       display:flex;
-      gap:10px;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+    .banner-photo{
+      width:100%;
+      height:205px;
+      border-radius:16px;
+      overflow:hidden;
+      background:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 12px 30px rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .banner-photo img{
+      max-width:100%;
+      max-height:100%;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      object-position:center;
+      display:block;
+    }
+    .banner-caption{
+      font-size:13px;
+      color:var(--ink);
+      font-weight:600;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      text-align:center;
+      padding-top:2px;
+      border-top:2px solid rgba(255,255,255,0.18);
+      width:180px;
+    }
+
+    .btn-row{
+      margin-top:4px;
+      display:flex;
+      gap:8px;
       justify-content:center;
     }
     .nav-btn{
-      padding:9px 20px;
+      padding:7px 16px;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
       color:#0b0e12;
       border-radius:10px;
-      font-size:14px;
+      font-size:13px;
       font-weight:700;
       text-decoration:none;
       box-shadow:0 4px 14px rgba(0,0,0,.45);
+      transition:transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+    .nav-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 7px 18px rgba(0,0,0,.6);
+      filter:brightness(1.05);
     }
 
     footer{
       text-align:center;
       font-size:11px;
-      padding:4px 0;
+      padding:4px 0 6px;
       color:#c7c7d8;
       border-top:1px solid rgba(255,255,255,.06);
+      background:rgba(12,14,18,0.95);
       position:relative;
       z-index:1;
     }
 
+    /* animations */
+    @keyframes fadeDown{
+      from{opacity:0; transform:translateY(-12px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(12px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes pulseLogo{
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.05);}
+    }
+    @keyframes sideSlideLeft{
+      from{opacity:0; transform:translate(-20px,-50%) rotate(-90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(-90deg);}
+    }
+    @keyframes sideSlideRight{
+      from{opacity:0; transform:translate(20px,-50%) rotate(90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(90deg);}
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
+
+    @media(max-width:900px){
+      body{
+        overflow-y:auto;
+        height:auto;
+      }
+      .nav-container,
+      .hero{
+        padding:0 14px;
+      }
+      .family-inner{
+        padding-top:8px;
+      }
+      .family-row{
+        flex-direction:column;
+        align-items:center;
+      }
+      .family-card{
+        max-width:260px;
+      }
+      .desc-row{
+        grid-template-columns:1fr;
+      }
+      .family-banner{
+        margin-top:12px;
+      }
+      .banner-photo{
+        height:200px;
+      }
+      .side-label,
+      .side-glow-left,
+      .side-glow-right,
+      .corner-orb{
+        display:none;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- corner orbs -->
+  <div class="corner-orb left-bottom"></div>
+  <div class="corner-orb right-top"></div>
+
+  <!-- side glows (A) -->
+  <div class="side-glow-left"></div>
+  <div class="side-glow-right"></div>
+
+  <!-- side quotes (B) -->
+  <div class="side-label left">FAMILY IS MY FOUNDATION</div>
+  <div class="side-label right">THEIR SUPPORT KEEPS ME GOING</div>
+
   <header>
-    <nav>
-      <a href="kazler_starter_pack.html">Home</a>
-      <a href="Education.html">Education</a>
-      <a href="Extra-Curricular.html">Extra-Curricular</a>
-      <a href="MyFamily.html" class="active">My Family</a>
-      <a href="MyBatchmates.html">My Batchmates</a>
-    </nav>
+    <div class="nav-container">
+      <div class="brand"><span class="logo"></span> My Family</div>
+      <nav>
+        <a href="kazler_starter_pack.html">Home</a>
+        <a href="Education.html">Education</a>
+        <a href="Extra-Curricular.html">Extra-Curricular</a>
+        <a href="MyFamily.html" class="active">My Family</a>
+        <a href="MyBatchmates.html">My Batchmates</a>
+      </nav>
+    </div>
   </header>
 
+  <!-- top chips -->
+  <section class="top-strip">
+    <div class="chip"><span class="chip-dot"></span> Only child</div>
+    <div class="chip"><span class="chip-dot"></span> Strong family support</div>
+    <div class="chip"><span class="chip-dot"></span> Baguio-based family</div>
+  </section>
+
   <section class="hero">
-    <div class="family-header">
-      <h1 class="family-title">My Family</h1>
-      <p class="family-text">
-        Here is a glimpse of my family — Jennie F. Umaging (Mother), Kassad P. Umaging (Father), and me, Kazler Carl F. Umaging (Only child). These are the people who support and motivate me throughout my BSIT journey.
-      </p>
-    </div>
-
-    <div class="family-grid">
-      <div class="family-card">
-        <div class="family-label">MY MOTHER<br><span style='font-size:13px; font-weight:600; color:var(--muted);'>Jennie F. Umaging</span></div>
-        <div class="family-photo"><img src="mother.jpg"></div>
+    <div class="family-inner">
+      <!-- header text -->
+      <div class="family-header">
+        <h1 class="family-title">My Family</h1>
+        <p class="family-text">
+          This is my small but supportive family — my mother, Jennie F. Umaging, my father, Kassad P. Umaging,
+          and me, Kazler Carl F. Umaging. They are the people who support and motivate me throughout my BSIT journey.
+        </p>
       </div>
 
-      <div class="family-card">
-        <div class="family-label">MY FATHER<br><span style='font-size:13px; font-weight:600; color:var(--muted);'>Kassad P. Umaging</span></div>
-        <div class="family-photo"><img src="father.jpg"></div>
+      <!-- short descriptions row -->
+      <div class="desc-row">
+        <div class="desc-card">
+          <div class="desc-title">Jennie – My Mother</div>
+          She is caring but firm and always reminds me to stay focused on my goals. She supports my studies
+          and is usually the first one to celebrate my achievements, big or small.
+        </div>
+        <div class="desc-card">
+          <div class="desc-title">Kassad – My Father</div>
+          He teaches me to be patient and practical. His advice helps me make better decisions, especially
+          when it comes to my future career in IT.
+        </div>
+        <div class="desc-card">
+          <div class="desc-title">Kazler – Me</div>
+          I’m the only child, currently taking BSIT – Network and Security. My family is my main source of
+          motivation whenever I feel tired or stressed with school work.
+        </div>
       </div>
 
-      <div class="family-card">
-        <div class="family-label">ME<br><span style='font-size:13px; font-weight:600; color:var(--muted);'>Kazler Carl F. Umaging</span></div>
-        <div class="family-photo"><img src="me.jpg"></div>
-      </div>
-    </div>
+      <!-- main photo cards -->
+      <div class="family-gallery">
+        <div class="family-row">
+          <div class="family-card">
+            <div class="family-label">
+              MY MOTHER
+              <span class="family-name">Jennie F. Umaging</span>
+            </div>
+            <div class="family-photo">
+              <img src="mother.jpg" alt="My mother">
+            </div>
+          </div>
 
-    <div class="btn-row">
-      <a class="nav-btn" href="Extra-Curricular.html">← Previous</a>
-      <a class="nav-btn" href="MyBatchmates.html">Next → My Batchmates</a>
+          <div class="family-card">
+            <div class="family-label">
+              MY FATHER
+              <span class="family-name">Kassad P. Umaging</span>
+            </div>
+            <div class="family-photo">
+              <img src="father.jpg" alt="My father">
+            </div>
+          </div>
+
+          <div class="family-card">
+            <div class="family-label">
+              ME
+              <span class="family-name">Kazler Carl F. Umaging</span>
+            </div>
+            <div class="family-photo">
+              <img src="Friends.jpg" alt="Me (Kazler)">
+            </div>
+          </div>
+        </div>
+
+        <!-- wide family banner – photo + caption -->
+        <div class="family-banner">
+          <div class="banner-photo">
+            <!-- change to your actual family photo filename -->
+            <img src="Family.jpg" alt="Our family picture">
+          </div>
+          <div class="banner-caption">My Family</div>
+        </div>
+      </div>
+
+      <!-- nav buttons -->
+      <div class="btn-row">
+        <a class="nav-btn" href="Extra-Curricular.html">← Previous</a>
+        <a class="nav-btn" href="MyBatchmates.html">Next → My Batchmates</a>
+      </div>
     </div>
   </section>
 
