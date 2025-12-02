@@ -12,52 +12,231 @@
       --muted:#a6adbb;
       --ink:#e9ecf2;
       --bg:#0b0e12;
+      --panel: rgba(10,13,18,0.9);
     }
 
-    html, body{
+    html { height:100%; }
+
+    body{
       margin:0;
       padding:0;
-      height:100%;
-      overflow:hidden; /* no page scroll */
+      height:100vh;
+      overflow:hidden; /* no page scroll at 100% */
       font-family:'Inter',sans-serif;
       background:var(--bg);
       color:var(--ink);
+      position:relative;
+      display:flex;
+      flex-direction:column;
     }
 
+    /* BACKGROUND ANIMATION */
+    @keyframes moveLights{
+      0%{background-position:16% 30%,82% 74%}
+      50%{background-position:58% 36%,28% 80%}
+      100%{background-position:20% 26%,76% 68%}
+    }
+
+    body::before, body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::before{
+      background-image:
+        radial-gradient(900px 700px at 22% 30%, rgba(124,156,255,.16), rgba(124,156,255,0) 60%),
+        radial-gradient(1100px 800px at 78% 70%, rgba(98,230,179,.12), rgba(98,230,179,0) 62%);
+      background-repeat:no-repeat;
+      background-size:140% 140%,160% 160%;
+      background-position:18% 28%,82% 72%;
+      animation:moveLights 24s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+    }
+    body::after{
+      background:radial-gradient(ellipse at center,
+        rgba(0,0,0,0) 55%,
+        rgba(0,0,0,0.35) 80%,
+        rgba(0,0,0,0.65) 100%);
+    }
+
+    /* SIDE LABELS TO FILL LEFT/RIGHT SPACE */
+    .side-label {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(166,173,187,0.55);
+      z-index: 1;
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      opacity:0;
+    }
+    .side-label::before {
+      content: "";
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(166,173,187,0.7));
+    }
+    .side-label.right::before {
+      background: linear-gradient(90deg, rgba(166,173,187,0.7), transparent);
+    }
+    .side-label.left {
+      left: 16px;
+      animation: sideSlideLeft 0.8s ease-out 0.4s forwards;
+    }
+    .side-label.right {
+      right: 16px;
+      transform: translateY(-50%) rotate(90deg);
+      animation: sideSlideRight 0.8s ease-out 0.4s forwards;
+    }
+
+    /* HEADER */
     header{
-      background:rgba(12,14,18,.9);
+      background:rgba(12,14,18,.95);
       border-bottom:1px solid rgba(255,255,255,.05);
-      padding:10px 18px;
+      padding:6px 0;
       position:sticky;
       top:0;
       z-index:10;
       backdrop-filter:blur(10px);
+      opacity:0;
+      transform:translateY(-10px);
+      animation: fadeDown 0.5s ease-out 0.1s forwards;
+    }
+
+    .nav-container{
+      max-width:1400px;
+      margin:0 auto;
+      padding:0 32px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .brand {
+      font-weight:700;
+      font-size:16px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .logo {
+      width:26px;
+      height:26px;
+      border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 12px rgba(98,230,179,.6);
+      animation:pulseLogo 3s ease-in-out infinite;
     }
 
     nav a{
       color:#ffffff;
       text-decoration:none;
-      margin-right:14px;
+      margin-left:14px;
       font-weight:600;
       font-size:13px;
+      transition:color .2s ease;
     }
 
     nav a.active{ color:var(--accent-2); }
+    nav a:hover { color:var(--accent-2); }
 
-    .container{
-      max-width:900px;
-      margin:10px auto 0;
-      padding:0 18px;
-      text-align:center;
-      height:80vh;                 /* space under header */
+    /* TOP STRIP / CHIPS */
+    .top-strip {
+      max-width:1400px;
+      margin:4px auto 0;
+      padding:0 32px 2px;
       display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
+      flex-wrap:wrap;
+      gap:6px;
+      position:relative;
+      z-index:1;
+      font-size:12px;
+      opacity:0;
+      transform:translateY(6px);
+      animation: fadeUp 0.6s ease-out 0.25s forwards;
+    }
+    .chip {
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(8,11,16,0.9);
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      backdrop-filter:blur(6px);
+    }
+    .chip-dot {
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:radial-gradient(circle at center,var(--accent-2),transparent);
+    }
+
+    /* MAIN LAYOUT */
+    .main{
+      flex:1;
+      max-width:1400px;
+      margin:0 auto;
+      padding:6px 32px 6px;
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1.3fr 0.7fr;
+      grid-template-areas:
+        "left right"
+        "band band";
+      column-gap:28px;
+      row-gap:8px;
+      opacity:0;
+      transform:translateY(10px);
+      animation: fadeUp 0.6s ease-out 0.45s forwards;
+    }
+
+    .left-panel{
+      grid-area:left;
+    }
+
+    .right-panel{
+      grid-area:right;
+      background:var(--panel);
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.06);
+      padding:10px 12px;
+      box-shadow:0 10px 24px rgba(0,0,0,0.6);
+      position:relative;
       overflow:hidden;
+      transform:translateX(8px);
+      opacity:0;
+      animation: fadeRight 0.6s ease-out 0.55s forwards;
+    }
+
+    /* faint decorative circle background on right panel */
+    .right-panel::before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle at center,
+        rgba(124,156,255,0.18),
+        transparent 60%);
+      top:-40px;
+      right:-40px;
+      opacity:0.7;
+      pointer-events:none;
     }
 
     h1{
-      font-size:22px;
+      font-size:24px;
       margin:4px 0;
       font-weight:800;
     }
@@ -68,12 +247,22 @@
       margin:0 0 8px;
     }
 
+    .divider{
+      height:2px;
+      width:60%;
+      max-width:360px;
+      margin:6px 0 10px;
+      background:linear-gradient(to right,var(--accent),var(--accent-2));
+      border:none;
+      border-radius:2px;
+    }
+
+    /* CARDS COLUMN */
     .cards{
-      flex:1;
       display:flex;
       flex-direction:column;
       gap:6px;
-      overflow:hidden;
+      margin-top:4px;
     }
 
     .entry{
@@ -85,6 +274,16 @@
       padding:8px 10px;
       min-height:52px;
       overflow:hidden;
+      position:relative;
+      box-shadow:0 6px 14px rgba(0,0,0,0.5);
+      transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor:default;
+    }
+
+    .entry:hover{
+      transform:translateY(-2px);
+      box-shadow:0 10px 22px rgba(0,0,0,0.7);
+      border-color:rgba(124,156,255,0.9);
     }
 
     .logo-box{
@@ -98,7 +297,8 @@
       justify-content:center;
       align-items:center;
       overflow:hidden;
-      font-size:16px;
+      font-size:18px;
+      flex-shrink:0;
     }
 
     .logo-box img{
@@ -124,14 +324,156 @@
     .meta{
       font-size:11px;
       color:var(--muted);
-      margin:0;
+      margin:0 0 3px;
     }
 
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:4px;
+    }
+
+    .tag{
+      font-size:10px;
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12);
+      color:var(--muted);
+      background:rgba(5,8,12,0.9);
+    }
+
+    /* make gaming card clickable still */
+    .entry.clickable{
+      cursor:pointer;
+    }
+
+    /* RIGHT PANEL CONTENT */
+    .right-title{
+      font-size:14px;
+      font-weight:700;
+      color:var(--accent-2);
+      margin-bottom:4px;
+      position:relative;
+      z-index:1;
+    }
+
+    .right-text{
+      font-size:13px;
+      color:var(--muted);
+      margin:0 0 6px;
+      line-height:1.45;
+      position:relative;
+      z-index:1;
+    }
+
+    .focus-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:4px 0 6px;
+      position:relative;
+      z-index:1;
+    }
+
+    .focus-chip{
+      font-size:11px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(5,8,12,0.9);
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .focus-chip span.icon{
+      font-size:13px;
+    }
+
+    .focus-chip:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(0,0,0,0.6);
+    }
+
+    .right-note{
+      font-size:12px;
+      color:rgba(166,173,187,0.9);
+      margin:4px 0 0;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding-top:6px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* BOTTOM BAND */
+    .band{
+      grid-area:band;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .band-box{
+      background:var(--panel);
+      border-radius:12px;
+      padding:8px 10px;
+      border:1px solid rgba(255,255,255,0.06);
+      backdrop-filter:blur(6px);
+      color:var(--muted);
+      min-height:60px;
+      position:relative;
+      overflow:hidden;
+      transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .band-box:hover{
+      transform:translateY(-2px);
+      box-shadow:0 9px 20px rgba(0,0,0,0.7);
+      border-color:rgba(124,156,255,0.9);
+    }
+
+    .band-title{
+      font-size:13px;
+      font-weight:700;
+      color:var(--accent-2);
+      margin-bottom:3px;
+      position:relative;
+      z-index:1;
+    }
+
+    .band-text{
+      margin:0;
+      line-height:1.4;
+      font-size:13px;
+      position:relative;
+      z-index:1;
+    }
+
+    .band-box::before{
+      content:"";
+      position:absolute;
+      right:-6px;
+      bottom:-8px;
+      font-size:32px;
+      opacity:0.12;
+      pointer-events:none;
+    }
+    .band-box:nth-child(1)::before{ content:"🧠"; }
+    .band-box:nth-child(2)::before{ content:"⌛"; }
+    .band-box:nth-child(3)::before{ content:"🤝"; }
+
+    /* BUTTON ROW */
     .btn-row{
       margin-top:6px;
       display:flex;
       justify-content:center;
       gap:8px;
+      position:relative;
+      z-index:1;
     }
 
     .nav-btn{
@@ -143,67 +485,231 @@
       font-weight:700;
       font-size:12px;
       box-shadow:0 4px 14px rgba(0,0,0,.45);
+      transition:transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .nav-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 7px 18px rgba(0,0,0,.6);
+      filter:brightness(1.05);
+    }
+
+    footer{
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
+      padding:4px 0 6px;
+      border-top:1px solid rgba(255,255,255,0.06);
+      background:rgba(12,14,18,0.95);
+      flex-shrink:0;
+      position:relative;
+      z-index:1;
+      opacity:0;
+      transform:translateY(6px);
+      animation: fadeUp 0.5s ease-out 0.7s forwards;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeDown{
+      from{opacity:0; transform:translateY(-12px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeUp{
+      from{opacity:0; transform:translateY(12px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeRight{
+      from{opacity:0; transform:translateX(16px);}
+      to{opacity:1; transform:translateX(0);}
+    }
+    @keyframes pulseLogo{
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.05);}
+    }
+    @keyframes sideSlideLeft{
+      from{opacity:0; transform:translate(-20px,-50%) rotate(-90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(-90deg);}
+    }
+    @keyframes sideSlideRight{
+      from{opacity:0; transform:translate(20px,-50%) rotate(90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(90deg);}
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
+
+    @media(max-width:900px){
+      body{
+        overflow-y:auto;
+        height:auto;
+      }
+      .nav-container,
+      .top-strip,
+      .main{
+        max-width:100%;
+        padding:0 18px;
+      }
+      .main{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "left"
+          "right"
+          "band";
+      }
+      .side-label{display:none;}
     }
   </style>
 </head>
 
 <body>
+
+  <!-- side labels -->
+  <div class="side-label left">Extra-Curricular</div>
+  <div class="side-label right">Skills & Hobbies</div>
+
   <header>
-    <nav>
-      <a href="kazler_starter_pack.html">Home</a>
-      <a href="Education.html">Education</a>
-      <a href="#" class="active">Extra-Curricular</a>
-      <a href="MyFamily.html">My Family</a>
-      <a href="MyBatchmates.html">My Batchmates</a>
-    </nav>
+    <div class="nav-container">
+      <div class="brand"><span class="logo"></span> Extra-Curricular</div>
+      <nav>
+        <a href="kazler_starter_pack.html">Home</a>
+        <a href="Education.html">Education</a>
+        <a href="#" class="active">Extra-Curricular</a>
+        <a href="MyFamily.html">My Family</a>
+        <a href="MyBatchmates.html">My Batchmates</a>
+      </nav>
+    </div>
   </header>
 
-  <div class="container">
-    <h1>Extra-Curricular Activities</h1>
-    <p class="subtitle">Activities supporting my growth in IT, cybersecurity, and teamwork.</p>
+  <!-- TOP CHIPS -->
+  <section class="top-strip">
+    <div class="chip"><span class="chip-dot"></span> Cybersecurity self-study</div>
+    <div class="chip"><span class="chip-dot"></span> Online courses</div>
+    <div class="chip"><span class="chip-dot"></span> Programming practice</div>
+    <div class="chip"><span class="chip-dot"></span> Gaming & strategy</div>
+  </section>
 
-    <div class="cards">
-      <!-- Cybersecurity self-study -->
-      <div class="entry">
-        <div class="logo-box"><img src="Kali.jpeg" alt="Kali Linux"></div>
-        <div class="entry-text">
-          <div class="title">Cybersecurity Self-Study</div>
-          <p class="meta">Kali Linux · Basic penetration testing tools</p>
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- LEFT: CARDS -->
+    <section class="left-panel">
+      <h1>Extra-Curricular Activities</h1>
+      <p class="subtitle">Activities that help me grow in IT, cybersecurity, and teamwork.</p>
+      <hr class="divider">
+
+      <div class="cards">
+        <!-- Cybersecurity self-study -->
+        <div class="entry">
+          <div class="logo-box"><img src="Kali.jpeg" alt="Kali Linux"></div>
+          <div class="entry-text">
+            <div class="title">Cybersecurity Self-Study</div>
+            <p class="meta">Kali Linux · Basic penetration testing tools</p>
+            <div class="tags">
+              <span class="tag">Terminal practice</span>
+              <span class="tag">Ethical hacking basics</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Udemy courses -->
+        <div class="entry">
+          <div class="logo-box"><img src="Udemy.png" alt="Udemy"></div>
+          <div class="entry-text">
+            <div class="title">Online Cybersecurity Courses</div>
+            <p class="meta">Website Hacking · Ethical Hacking · Python for Ethical Hacking</p>
+            <div class="tags">
+              <span class="tag">Self-paced learning</span>
+              <span class="tag">Hands-on labs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programming practice -->
+        <div class="entry">
+          <div class="logo-box"><img src="Python.png" alt="Python"></div>
+          <div class="entry-text">
+            <div class="title">Programming & IT Practice</div>
+            <p class="meta">Python · HTML · CSS · Networking basics</p>
+            <div class="tags">
+              <span class="tag">Problem-solving</span>
+              <span class="tag">Logic building</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gaming -->
+        <div class="entry clickable" onclick="window.open('gaming_video.mp4','_blank')">
+          <div class="logo-box">🎮</div>
+          <div class="entry-text">
+            <div class="title">Gaming</div>
+            <p class="meta">Strategy and team-based gameplay to build focus and quick decision-making.</p>
+            <div class="tags">
+              <span class="tag">Teamwork</span>
+              <span class="tag">Reaction time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: HIGHLIGHT PANEL -->
+    <aside class="right-panel">
+      <div>
+        <div class="right-title">How These Activities Help Me</div>
+        <p class="right-text">
+          My extra-curricular activities are connected to what I want to do in IT. They give me a place to
+          test tools, apply what I learn in class, and improve my focus and discipline.
+        </p>
+
+        <div class="right-title">Skills I’m Developing</div>
+        <div class="focus-chips">
+          <div class="focus-chip"><span class="icon">🛡️</span>Security awareness</div>
+          <div class="focus-chip"><span class="icon">🧩</span>Analytical thinking</div>
+          <div class="focus-chip"><span class="icon">💻</span>Programming habits</div>
+          <div class="focus-chip"><span class="icon">🎯</span>Focus and timing</div>
         </div>
       </div>
 
-      <!-- Udemy courses -->
-      <div class="entry">
-        <div class="logo-box"><img src="Udemy.png" alt="Udemy"></div>
-        <div class="entry-text">
-          <div class="title">Online Cybersecurity Courses</div>
-          <p class="meta">Website Hacking · Ethical Hacking · Python for Ethical Hacking</p>
-        </div>
-      </div>
+      <p class="right-note">
+        These activities support my goal to work in networking and cybersecurity in the future.
+      </p>
 
-      <!-- Programming practice -->
-      <div class="entry">
-        <div class="logo-box"><img src="Python.png" alt="Python"></div>
-        <div class="entry-text">
-          <div class="title">Programming & IT Practice</div>
-          <p class="meta">Python · HTML · CSS · Networking basics</p>
-        </div>
+      <div class="btn-row">
+        <a class="nav-btn" href="Education.html">← Previous: Education</a>
+        <a class="nav-btn" href="MyFamily.html">Next → My Family</a>
       </div>
+    </aside>
 
-      <!-- Gaming -->
-      <div class="entry" onclick="window.open('gaming_video.mp4','_blank')">
-        <div class="logo-box">🎮</div>
-        <div class="entry-text">
-          <div class="title">Gaming</div>
-          <p class="meta">Strategy & team-based gameplay to build focus and quick decision-making.</p>
-        </div>
+    <!-- BOTTOM BAND -->
+    <section class="band">
+      <div class="band-box">
+        <div class="band-title">Mindset</div>
+        <p class="band-text">
+          Cybersecurity and programming teach me to break problems into smaller steps and think carefully before I act.
+        </p>
       </div>
-    </div>
+      <div class="band-box">
+        <div class="band-title">Discipline</div>
+        <p class="band-text">
+          Doing self-study and online courses requires time management and consistency outside of school work.
+        </p>
+      </div>
+      <div class="band-box">
+        <div class="band-title">Teamwork & Play</div>
+        <p class="band-text">
+          Gaming helps me practice communication, strategy, and staying calm under pressure.
+        </p>
+      </div>
+    </section>
 
-    <div class="btn-row">
-      <a class="nav-btn" href="Education.html">← Previous</a>
-      <a class="nav-btn" href="MyFamily.html">Next → My Family</a>
-    </div>
-  </div>
+  </main>
+
+  <footer>© 2025 Kazler Carl Flores Umaging</footer>
+
 </body>
 </html>
