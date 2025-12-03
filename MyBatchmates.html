@@ -30,7 +30,7 @@
       flex-direction:column;
     }
 
-    /* subtle moving background like other pages */
+    /* subtle moving background */
     @keyframes moveLights{
       0%{background-position:10% 18%, 90% 80%}
       50%{background-position:40% 24%, 60% 76%}
@@ -94,15 +94,6 @@
       right:22px;
       transform:translateY(-50%) rotate(90deg);
       animation:sideSlideRight 0.7s ease-out 0.3s forwards;
-    }
-
-    @keyframes sideSlideLeft{
-      from{opacity:0; transform:translate(-18px,-50%) rotate(-90deg);}
-      to{opacity:1; transform:translateY(-50%) rotate(-90deg);}
-    }
-    @keyframes sideSlideRight{
-      from{opacity:0; transform:translate(18px,-50%) rotate(90deg);}
-      to{opacity:1; transform:translateY(-50%) rotate(90deg);}
     }
 
     header{
@@ -190,6 +181,7 @@
       -webkit-mask-composite:xor;
       mask-composite:exclude;
       opacity:0.85;
+      pointer-events:none; /* important: don't block clicks */
     }
 
     .batch-title{
@@ -279,6 +271,8 @@
       margin-top:6px;
       display:flex;
       justify-content:center;
+      position:relative;
+      z-index:2;
     }
     .nav-btn{
       padding:7px 22px;
@@ -320,6 +314,15 @@
     @keyframes pulseLogo{
       0%,100%{transform:scale(1);}
       50%{transform:scale(1.05);}
+    }
+
+    @keyframes sideSlideLeft{
+      from{opacity:0; transform:translate(-18px,-50%) rotate(-90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(-90deg);}
+    }
+    @keyframes sideSlideRight{
+      from{opacity:0; transform:translate(18px,-50%) rotate(90deg);}
+      to{opacity:1; transform:translateY(-50%) rotate(90deg);}
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -388,8 +391,8 @@
         </div>
 
         <div class="me-card">
-          <div class="me-label">Network and Security</div>
-          <div class="me-sub">Umaging, Kazler Carl F.</div>
+          <div class="me-label">Me in the Block</div>
+          <div class="me-sub">A quick snapshot of me as part of The Dyslers.</div>
           <div class="me-photo">
             <!-- use whatever solo photo you like here -->
             <img src="me.jpg" alt="Kazler Carl Umaging">
